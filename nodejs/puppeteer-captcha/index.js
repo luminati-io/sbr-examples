@@ -12,9 +12,7 @@ async function scrape(url = TARGET_URL) {
     }
     console.log('Connecting to Browser...');
     const browserWSEndpoint = `https://${AUTH}@brd.superproxy.io:9222`;
-    const browser = await puppeteer.connect({
-        browserWSEndpoint,
-    });
+    const browser = await puppeteer.connect({ browserWSEndpoint });
     try {
         console.log(`Connected! Navigating to ${url}...`);
         const page = await browser.newPage();
