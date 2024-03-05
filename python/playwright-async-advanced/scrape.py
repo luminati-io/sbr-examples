@@ -28,7 +28,6 @@ async def scrape(playwright: Playwright, url=TARGET_URL):
         print('Scraping will continue in 10 seconds...')
         await asyncio.sleep(10)
         print(f'Navigating to {url}...')
-        print(f'Connected! Navigating to {url}...')
         await page.goto(url, timeout=2*60_000)
         print('Navigated! Scraping paragraphs...')
         data = await page.eval_on_selector_all(
