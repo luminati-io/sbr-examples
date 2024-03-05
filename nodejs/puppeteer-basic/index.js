@@ -7,17 +7,17 @@ const {
 
 async function scrape(url = TARGET_URL) {
     if (AUTH == 'USER:PASS') {
-        throw new Error('Provide Scraping Browsers credentials in AUTH'
-            + ' environment variable or update the script.');
+        throw new Error(`Provide Scraping Browsers credentials in AUTH`
+            + ` environment variable or update the script.`);
     }
-    console.log('Connecting to Browser...');
+    console.log(`Connecting to Browser...`);
     const browserWSEndpoint = `https://${AUTH}@brd.superproxy.io:9222`;
     const browser = await puppeteer.connect({ browserWSEndpoint });
     try {
         console.log(`Connected! Navigating to ${url}...`);
         const page = await browser.newPage();
         await page.goto(url, { timeout: 2 * 60 * 1000 });
-        console.log('Navigated! Scraping page content...');
+        console.log(`Navigated! Scraping page content...`);
         const data = await page.content();
         console.log(`Scraped! Data: ${data}`);
     } finally {
