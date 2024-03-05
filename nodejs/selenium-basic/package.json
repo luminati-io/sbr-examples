@@ -2,9 +2,9 @@
   "name": "@brightdata/sbr-examples",
   "version": "1.0.0",
   "description": "Examples of usage BrightData's Scraping Browsers",
-  "main": "index.js",
+  "main": "scrape.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "node scrape.js"
   },
   "engines": {
     "node": ">=18.0"
