@@ -16,10 +16,13 @@ async function scrape(url = TARGET_URL) {
     try {
         console.log(`Connected! Navigating to ${url}...`);
         const page = await browser.newPage();
+        const client = await page.context().newCDPSession(page);
         await page.goto(url, { timeout: 2 * 60 * 1000 });
-        console.log(`Navigated! Scraping page content...`);
-        const data = await page.content();
-        console.log(`Scraped! Data: ${data}`);
+        console.log(`Navigated! Waiting captcha to detect and solve...`);
+        const { status } = await client.send('Captcha.waitForSolve', {
+            detectTimeout: 10 * 1000,
+        });
+        console.log(`Captcha status: ${status}`);
     } finally {
         await browser.close();
     }
