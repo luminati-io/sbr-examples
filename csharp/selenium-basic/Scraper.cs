@@ -12,7 +12,7 @@ class Scraper
         _auth = auth;
     }
 
-    private WebDriver Connect()
+    private IWebDriver Connect()
     {
         if (_auth == "USER:PASS")
         {
@@ -35,16 +35,9 @@ class Scraper
         try {
             Log($"Connected! Navigating to {url}...");
             driver.Navigate().GoToUrl(url);
-            Log("Navigated! Waiting captcha to detect and solve...");
-            var result = (Dictionary<string, object>) driver.ExecuteCustomDriverCommand("cdp", new ()
-            {
-                {"cmd", "Captcha.solve"},
-                {"params", new Dictionary<string, object>(){
-                    {"detectTimeout", 10000},
-                }},
-            }) as Dictionary<string, object>;
-            var status = (string) result!["status"];
-            Log($"Captcha status: {status}");
+            Log("Navigated! Scraping page content...");
+            var data = driver.PageSource;
+            Log($"Scraped! Data: {data}");
         } finally {
             driver.Quit();
         }
@@ -63,7 +56,7 @@ class Scraper
     public static void Main()
     {
         var auth = Env("AUTH", "USER:PASS");
-        var url = Env("TARGET_URL", "https://example.com");
+        var url = Env("TARGET_URL", "https://www.example.com");
         var scraper = new Scraper(auth);
         scraper.Scrape(url);
     }
