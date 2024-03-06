@@ -51,7 +51,7 @@ class Scraper
 
     private static string Env(string name, string defaultValue)
     {
-        return System.Environment.GetEnvironmentVariable(name) ?? defaultValue;
+        return Environment.GetEnvironmentVariable(name) ?? defaultValue;
     }
 
     private static void Log(string message)

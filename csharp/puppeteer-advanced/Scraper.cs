@@ -46,10 +46,8 @@ class Scraper
         var client = await page.Target.CreateCDPSessionAsync();
         var frames = await client.SendAsync("Page.getFrameTree");
         var frameId = (string) frames!["frameTree"]!["frame"]!["id"]!;
-        var inspect = await client.SendAsync("Page.inspect", new
-        {
-            frameId = frameId
-        });
+        var inspect = await client.SendAsync("Page.inspect",
+                new { frameId = frameId });
         var inspectUrl = (string) inspect!["url"]!;
         Log($"You can inspect this session at: {inspectUrl}");
         Log("Scraping will continue in 10 seconds...");
@@ -68,7 +66,7 @@ class Scraper
 
     private static string Env(string name, string defaultValue)
     {
-        return System.Environment.GetEnvironmentVariable(name) ?? defaultValue;
+        return Environment.GetEnvironmentVariable(name) ?? defaultValue;
     }
 
     private static void Log(string message)
