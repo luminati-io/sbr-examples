@@ -12,7 +12,7 @@ async def scrape(playwright: Playwright, url=TARGET_URL):
         raise Exception('Provide Scraping Browsers credentials in AUTH ' +
                         'environment variable or update the script.')
     print('Connecting to Browser...')
-    endpoint_url = f'https://{AUTH}@brd.superproxy.io:9222'
+    endpoint_url = f'wss://{AUTH}@brd.superproxy.io:9222'
     browser = await playwright.chromium.connect_over_cdp(endpoint_url)
     try:
         print(f'Connected! Navigating to {url}...')

@@ -11,7 +11,7 @@ async function scrape(url = TARGET_URL) {
             + ` environment variable or update the script.`);
     }
     console.log(`Connecting to Browser...`);
-    const endpointURL = `https://${AUTH}@brd.superproxy.io:9222`;
+    const endpointURL = `wss://${AUTH}@brd.superproxy.io:9222`;
     const browser = await playwright.chromium.connectOverCDP(endpointURL);
     try {
         console.log(`Connected! Starting inspect session...`);
