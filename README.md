@@ -17,19 +17,16 @@ Pass it in format `USER:PASS` as environment variable `AUTH`
 for unix shell:
 ```bash
 export AUTH=brd-customer-hl_01234567-zone-scraping_browser:abcdefghijkl
-node scrape.js
 ```
 
 for windows cmd:
 ```cmd
 set AUTH=brd-customer-hl_01234567-zone-scraping_browser:abcdefghijkl
-node scrape.js
 ```
 
 for powershell:
 ```powershell
 $Env:AUTH = 'brd-customer-hl_01234567-zone-scraping_browser:abcdefghijkl'
-node scrape.js
 ```
 
 You can also pass `TARGET_URL` environment variable to change default
