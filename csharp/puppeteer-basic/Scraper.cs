@@ -40,13 +40,17 @@ class Scraper
     public async Task Scrape(string url)
     {
         Log("Connecting to Browser...");
-        using var browser = await Connect();
-        Log($"Connected! Navigating to {url}...");
-        var page = await browser.NewPageAsync();
-        await page.GoToAsync(url, /* timeout= */ 2 * 60 * 1000);
-        Log("Navigated! Scraping page content...");
-        var data = await page.GetContentAsync();
-        Log($"Scraped! Data: {data}");
+        var browser = await Connect();
+        try {
+            Log($"Connected! Navigating to {url}...");
+            var page = await browser.NewPageAsync();
+            await page.GoToAsync(url, /* timeout= */ 2 * 60 * 1000);
+            Log("Navigated! Scraping page content...");
+            var data = await page.GetContentAsync();
+            Log($"Scraped! Data: {data}");
+        } finally {
+            await browser.CloseAsync();
+        }
     }
 
     private static string Env(string name, string defaultValue)

@@ -52,8 +52,8 @@ class Scraper
             Log($"Scraped! Data: [{string.Join(", ", data)}]");
             Log("Session will be closed in 1 minute...");
             Thread.Sleep(60 * 1000);
-            Log("Closing session.");
         } finally {
+            Log("Closing session.");
             driver.Quit();
         }
     }

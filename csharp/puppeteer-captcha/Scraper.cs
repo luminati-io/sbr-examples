@@ -40,18 +40,22 @@ class Scraper
     public async Task Scrape(string url)
     {
         Log("Connecting to Browser...");
-        using var browser = await Connect();
-        Log($"Connected! Navigating to {url}...");
-        var page = await browser.NewPageAsync();
-        var client = await page.Target.CreateCDPSessionAsync();
-        await page.GoToAsync(url, /* timeout= */ 2 * 60 * 1000);
-        Log("Navigated! Waiting captcha to detect and solve...");
-        var result = await client.SendAsync("Captcha.waitForSolve", new
-        {
-            detectTimeout = 10 * 1000,
-        });
-        var status = (string) result["status"]!;
-        Log($"Captcha status: {status}");
+        var browser = await Connect();
+        try {
+            Log($"Connected! Navigating to {url}...");
+            var page = await browser.NewPageAsync();
+            var client = await page.Target.CreateCDPSessionAsync();
+            await page.GoToAsync(url, /* timeout= */ 2 * 60 * 1000);
+            Log("Navigated! Waiting captcha to detect and solve...");
+            var result = await client.SendAsync("Captcha.waitForSolve", new
+            {
+                detectTimeout = 10 * 1000,
+            });
+            var status = (string) result["status"]!;
+            Log($"Captcha status: {status}");
+        } finally {
+            await browser.CloseAsync();
+        }
     }
 
     private static string Env(string name, string defaultValue)

@@ -40,28 +40,32 @@ class Scraper
     public async Task Scrape(string url)
     {
         Log("Connecting to Browser...");
-        using var browser = await Connect();
-        Log("Connected! Starting inspect session...");
-        var page = await browser.NewPageAsync();
-        var client = await page.Target.CreateCDPSessionAsync();
-        var frames = await client.SendAsync("Page.getFrameTree");
-        var frameId = (string) frames!["frameTree"]!["frame"]!["id"]!;
-        var inspect = await client.SendAsync("Page.inspect",
-                new { frameId = frameId });
-        var inspectUrl = (string) inspect!["url"]!;
-        Log($"You can inspect this session at: {inspectUrl}");
-        Log("Scraping will continue in 10 seconds...");
-        await Task.Delay(10 * 1000);
-        Log($"Navigating to {url}...");
-        await page.GoToAsync(url, /* timeout= */ 2 * 60 * 1000);
-        Log("Navigated! Scraping paragraphs...");
-        var paragraphs = await page.QuerySelectorAllHandleAsync("p");
-        var data = await paragraphs.EvaluateFunctionAsync(
-                "els => els.map(el => el.innerText)");
-        Log($"Scraped! Data: {data}");
-        Log("Session will be closed in 1 minute...");
-        await Task.Delay(60 * 1000);
-        Log("Closing session.");
+        var browser = await Connect();
+        try {
+            Log("Connected! Starting inspect session...");
+            var page = await browser.NewPageAsync();
+            var client = await page.Target.CreateCDPSessionAsync();
+            var frames = await client.SendAsync("Page.getFrameTree");
+            var frameId = (string) frames!["frameTree"]!["frame"]!["id"]!;
+            var inspect = await client.SendAsync("Page.inspect",
+                    new { frameId = frameId });
+            var inspectUrl = (string) inspect!["url"]!;
+            Log($"You can inspect this session at: {inspectUrl}");
+            Log("Scraping will continue in 10 seconds...");
+            await Task.Delay(10 * 1000);
+            Log($"Navigating to {url}...");
+            await page.GoToAsync(url, /* timeout= */ 2 * 60 * 1000);
+            Log("Navigated! Scraping paragraphs...");
+            var paragraphs = await page.QuerySelectorAllHandleAsync("p");
+            var data = await paragraphs.EvaluateFunctionAsync(
+                    "els => els.map(el => el.innerText)");
+            Log($"Scraped! Data: {data}");
+            Log("Session will be closed in 1 minute...");
+            await Task.Delay(60 * 1000);
+        } finally {
+            Log("Closing session.");
+            await browser.CloseAsync();
+        }
     }
 
     private static string Env(string name, string defaultValue)
