@@ -16,12 +16,14 @@ def scrape(url=TARGET_URL):
     print('Connecting to Browser...')
     server_addr = f'https://{AUTH}@brd.superproxy.io:9515'
     connection = Connection(server_addr, 'goog', 'chrome')
-    with Remote(connection, options=Options()) as driver:
-        def cdp(cmd, params={}):
-            return driver.execute('executeCdpCommand', {
-                'cmd': cmd,
-                'params': params,
-            })['value']
+    driver = Remote(connection, options=Options())
+
+    def cdp(cmd, params={}):
+        return driver.execute('executeCdpCommand', {
+            'cmd': cmd,
+            'params': params,
+        })['value']
+    try:
         print('Connected! Starting inspect session...')
         frames = cdp('Page.getFrameTree')
         frame_id = frames['frameTree']['frame']['id']
@@ -41,7 +43,9 @@ def scrape(url=TARGET_URL):
         print('Scraped! Data', data)
         print('Session will be closed in 1 minute...')
         sleep(60)
+    finally:
         print('Closing session.')
+        driver.quit()
 
 
 if __name__ == '__main__':

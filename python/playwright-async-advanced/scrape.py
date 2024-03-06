@@ -35,8 +35,8 @@ async def scrape(playwright: Playwright, url=TARGET_URL):
         print('Scraped! Data', data)
         print('Session will be closed in 1 minute...')
         await asyncio.sleep(60)
-        print('Closing session.')
     finally:
+        print('Closing session.')
         await browser.close()
 
 

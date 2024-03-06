@@ -14,12 +14,15 @@ def scrape(url=TARGET_URL):
     print('Connecting to Browser...')
     server_addr = f'https://{AUTH}@brd.superproxy.io:9515'
     connection = Connection(server_addr, 'goog', 'chrome')
-    with Remote(connection, options=Options()) as driver:
+    driver = Remote(connection, options=Options())
+    try:
         print(f'Connected! Navigating to {url}...')
         driver.get(url)
         print('Navigated! Scraping page content...')
         data = driver.page_source
         print(f'Scraped! Data: {data}')
+    finally:
+        driver.quit()
 
 
 if __name__ == '__main__':

@@ -34,8 +34,8 @@ async function scrape(url = TARGET_URL) {
         console.log(`Scraped! Data:`, data);
         console.log(`Session will be closed in 1 minute...`);
         await sleep(60);
-        console.log(`Closing session.`);
     } finally {
+        console.log(`Closing session.`);
         await driver.quit();
     }
 }
