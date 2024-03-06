@@ -19,10 +19,9 @@ class Scraper
             throw new Exception("Provide Scraping Browsers credentials in AUTH"
                     + " environment variable or update the script.");
         }
-        var wsEndpoint = $"wss://{_auth}@brd.superproxy.io:9222";
         var options = new ConnectOptions()
         {
-            BrowserWSEndpoint = wsEndpoint,
+            BrowserWSEndpoint = "wss://brd.superproxy.io:9222",
             WebSocketFactory = async (uri, options, cToken) =>
             {
                 var socket = new ClientWebSocket();
