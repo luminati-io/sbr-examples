@@ -56,3 +56,14 @@ $ cd python/playwright-async-basic
 .../playwright-async-basic$ pip3 install -r requirements.txt
 .../playwright-async-basic$ python3 scrape.py
 ```
+
+csharp
+------
+
+Use dotnet utility to install required libraries, build and run
+
+```
+$ cd csharp/puppeteer-basic
+.../puppeteer-basic$ dotnet run
+```
+
