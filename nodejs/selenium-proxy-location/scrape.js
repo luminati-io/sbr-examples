@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const puppeteer = require('puppeteer-core');
+const { Builder, Browser, By } = require('selenium-webdriver');
 const {
     AUTH = 'USER:PASS',
     TARGET_URL = 'https://geo.brdtest.com/mygeo.json',
@@ -23,43 +23,32 @@ async function scrape(url = TARGET_URL, location = LOCATION) {
     }
     const { lat, lon } = LOCATIONS[location];
     console.log(`Connecting to Browser...`);
-    const browserWSEndpoint = `wss://${AUTH}@brd.superproxy.io:9222`;
-    const browser = await puppeteer.connect({ browserWSEndpoint });
+    const server = `https://${AUTH}@brd.superproxy.io:9515`;
+    const driver = await new Builder()
+        .forBrowser(Browser.CHROME)
+        .usingServer(server)
+        .build();
     try {
         console.log(`Connected! Changing proxy location`
             + ` to ${location} (${lat}, ${lon})...`);
-        const page = await browser.newPage();
-        const client = await page.createCDPSession();
-        await client.send('Proxy.setLocation', {
+        await driver.sendAndGetDevToolsCommand('Proxy.setLocation', {
             lat, lon,
             distance: 50 /* kilometers */,
         });
         console.log(`Navigating to ${url}...`);
-        await page.goto(url, { timeout: 2 * 60 * 1000 });
+        await driver.get(url);
         console.log(`Navigated! Scraping data...`);
-        const data = await page.$eval('body', el => el.innerText);
+        const body = await driver.findElement(By.css('body'));
+        const data = await body.getText();
         console.log(`Scraped! Data:`, JSON.parse(data));
     } finally {
-        await browser.close();
-    }
-}
-
-function getErrorDetails(error) {
-    if (error.target?._req?.res) {
-        const {
-            statusCode,
-            statusMessage,
-        } = error.target._req.res;
-        return `Unexpected Server Status ${statusCode}: ${statusMessage}`;
+        await driver.quit();
     }
 }
 
 if (require.main == module) {
     scrape().catch(error => {
-        console.error(getErrorDetails(error)
-            || error.stack
-            || error.message
-            || error);
+        console.error(error.stack || error.message || error);
         process.exit(1);
     });
 }
