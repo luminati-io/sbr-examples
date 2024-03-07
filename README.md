@@ -7,6 +7,7 @@ libraries.
 - *-basic: simple scraping of targeted page
 - *-captcha: open a page and wait for captcha to solve
 - *-advanced: inspect scraping session, advanced scraping using js snippets
+- *-proxy-location: change proxy location before scraping
 
 How to run examples
 -------------------
