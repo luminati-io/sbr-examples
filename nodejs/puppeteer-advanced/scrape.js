@@ -37,7 +37,7 @@ async function scrape(url = TARGET_URL) {
     }
 }
 
-function sleep(seconds){
+function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
 
