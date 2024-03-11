@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import asyncio
-import base64
 from os import environ
+from base64 import standard_b64decode
 from playwright.async_api import Playwright, Page, CDPSession, async_playwright
 
 AUTH = environ.get('AUTH', default='USER:PASS')
@@ -37,7 +37,7 @@ async def scrape(playwright: Playwright, url=TARGET_URL,
                 'handle': stream['stream'],
             })
             if chunk['base64Encoded']:
-                data = base64.standard_b64decode(chunk['data'])
+                data = standard_b64decode(chunk['data'])
             else:
                 data = bytes(chunk['data'], 'utf8')
             file.write(data)
