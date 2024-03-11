@@ -60,6 +60,10 @@ async def initiate_download(page: Page, client: CDPSession, selector):
         else:
             future.set_result(request_id)
 
+    def on_click(click: asyncio.Future):
+        if not future.done() and click.exception():
+            future.set_exception(click.exception())
+
     await client.send('Fetch.enable', {
         'patterns': [{
             'requestStage': 'Response',
@@ -67,7 +71,7 @@ async def initiate_download(page: Page, client: CDPSession, selector):
         }],
     })
     client.on('Fetch.requestPaused', on_request_paused)
-    asyncio.ensure_future(page.click(selector))
+    asyncio.ensure_future(page.click(selector)).add_done_callback(on_click)
     return await future
 
 
