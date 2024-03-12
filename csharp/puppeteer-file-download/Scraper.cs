@@ -67,9 +67,7 @@ class Scraper
                 await file.WriteAsync(data);
                 fileSize += data.Length;
                 if ((bool) chunk["eof"]!)
-                {
                     break;
-                }
             }
             file.Close();
             Log($"Download saved! Size {fileSize}.");
