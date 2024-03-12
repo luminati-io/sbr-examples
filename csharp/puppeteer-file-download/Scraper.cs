@@ -81,16 +81,19 @@ class Scraper
     private async Task<string> InitiateDownload(IPage page, ICDPSession client, string selector)
     {
         var task = new TaskCompletionSource<string>();
+
         void onRequestPaused(object? sender, MessageEventArgs args)
         {
             if (args.MessageID == "Fetch.requestPaused")
                 task.TrySetResult((string) args.MessageData["requestId"]!);
         }
+
         void onClick(Task click)
         {
             if (click.IsFaulted)
                 task.TrySetException(click.Exception!);
         }
+
         await client.SendAsync("Fetch.enable", new
         {
             patterns = new[]{
