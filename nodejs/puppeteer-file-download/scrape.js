@@ -21,47 +21,47 @@ async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         await page.goto(url, { timeout: 2 * 60 * 1000 });
-        console.log(`Navigated! Initiate download...`);
-        await client.send('Fetch.enable', {
-            patterns: [{
-                requestStage: 'Response',
-                resourceType: 'Document',
-            }],
-        });
-        const requestId = await new Promise((resolve, reject) => {
-            let resolved = false;
-            client.on('Fetch.requestPaused', ({ requestId }) => {
-                if (resolved) {
-                    client.send('Fetch.continueRequest', { requestId });
-                } else {
-                    resolved = true;
-                    resolve(requestId);
-                }
-            });
-            page.click(selector).catch(error => {
-                if (!resolved) {
-                    reject(error);
-                }
-            });
-        });
+        console.log(`Navigated! Initiating download...`);
+        const requestId = await initiateDownload(page, client, selector);
         console.log(`Download started! Stream it to ${filename}...`);
-        const { stream } = await client.send('Fetch.takeResponseBodyAsStream', { requestId });
+        const { stream } = await client.send('Fetch.takeResponseBodyAsStream', {
+            requestId,
+        });
         const file = await fs.open(filename, 'w');
-        let bytes = 0;
+        let fileSize = 0;
         while (true) {
             const { data, base64Encoded, eof } = await client.send('IO.read', {
                 handle: stream,
             });
             const chunk = Buffer.from(data, base64Encoded ? 'base64' : 'utf8');
             await file.write(chunk);
-            bytes += chunk.byteLength;
-            if (eof) break;
+            fileSize += chunk.byteLength;
+            if (eof) {
+                break;
+            }
         }
         await file.close();
-        console.log(`Download saved! Size: ${bytes}.`);
+        console.log(`Download saved! Size: ${fileSize}.`);
     } finally {
         await browser.close();
     }
+}
+
+async function initiateDownload(page, client, selector) {
+    await client.send('Fetch.enable', {
+        patterns: [{
+            requestStage: 'Response',
+            resourceType: 'Document',
+        }],
+    });
+    return await new Promise((resolve, reject) => {
+        client.on('Fetch.requestPaused', ({ requestId }) => {
+            resolve(requestId);
+        });
+        page.click(selector).catch(error => {
+            reject(error);
+        });
+    });
 }
 
 function getErrorDetails(error) {
