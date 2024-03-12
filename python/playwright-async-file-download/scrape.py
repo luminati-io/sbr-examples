@@ -54,11 +54,8 @@ async def initiate_download(page: Page, client: CDPSession, selector):
     future = asyncio.get_running_loop().create_future()
 
     def on_request_paused(event):
-        request_id = event['requestId']
-        if future.done():
-            asyncio.ensure_future(client.send('Fetch.continueRequest', {'requestId': request_id}))
-        else:
-            future.set_result(request_id)
+        if not future.done():
+            future.set_result(event['requestId'])
 
     def on_click(click: asyncio.Future):
         if not future.done() and click.exception():
