@@ -1,8 +1,8 @@
-import java.net.URI;
-import java.util.Map;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
+import java.net.URI;
+import java.util.Map;
 
 public class Scraper {
 
