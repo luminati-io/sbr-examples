@@ -8,8 +8,7 @@ libraries.
 - *-captcha: open a page and wait for captcha to solve
 - *-advanced: inspect scraping session, advanced scraping using js snippets
 - *-proxy-location: change proxy location before scraping
-- *-interaction: interact with the page to get data
-- *-download: get browser's download
+- *-file-download: get browser's download
 
 How to run examples
 -------------------
@@ -73,7 +72,7 @@ java
 Use maven tool to package executable jar file with required libraries
 
 ```
-$ cdp java/playwright-basic
+$ cd java/playwright-basic
 .../playwright-basic$ mvn package
 .../playwright-basic$ java -jar target/sbr-examples-1.0.jar
 ```
