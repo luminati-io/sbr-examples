@@ -27,7 +27,7 @@ func connect(ctx context.Context, auth string) (context.Context, context.CancelF
 func scrape(ctx context.Context, url string) (string, error) {
 	var result string
 	bCtx, bCtxCancel := chromedp.NewContext(ctx)
-    defer bCtxCancel()
+	defer bCtxCancel()
 	err := chromedp.Run(bCtx,
 		chromedp.Navigate(url),
 		chromedp.EvaluateAsDevTools("document.documentElement.outerHTML", &result),
