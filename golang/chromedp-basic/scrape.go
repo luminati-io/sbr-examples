@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/chromedp/chromedp"
-	"github.com/gobwas/ws"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/chromedp/chromedp"
+	"github.com/gobwas/ws"
 )
 
 func connect(ctx context.Context, auth string) (context.Context, context.CancelFunc) {
