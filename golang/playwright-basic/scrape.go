@@ -44,6 +44,7 @@ func scrape(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	fmt.Print("Navigated! Scraping page content...\n")
 	result, err := page.Content()
 	if err != nil {
 		return "", err
