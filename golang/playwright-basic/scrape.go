@@ -30,31 +30,31 @@ func connect() (playwright.Browser, error) {
 
 func scrape(url string) (string, error) {
 	fmt.Print("Connecting to Browser...\n")
-	br, err1 := connect()
-	if err1 != nil {
-		return "", err1
+	br, err := connect()
+	if err != nil {
+		return "", err
 	}
 	defer br.Close()
 	fmt.Printf("Connected! Navigating to %s...\n", url)
-	page, err2 := br.NewPage()
-	if err2 != nil {
-		return "", err2
+	page, err := br.NewPage()
+	if err != nil {
+		return "", err
 	}
-	_, err3 := page.Goto(url)
-	if err3 != nil {
-		return "", err3
+	_, err = page.Goto(url)
+	if err != nil {
+		return "", err
 	}
-	result, err4 := page.Content()
-	if err4 != nil {
-		return "", err4
+	result, err := page.Content()
+	if err != nil {
+		return "", err
 	}
 	fmt.Printf("Scraped! Data: %s\n", result)
 	return result, nil
 }
 
 func main() {
-	url := os.Getenv("TARGET_URL")
-	if url == "" {
+	url, ok := os.LookupEnv("TARGET_URL")
+	if !ok {
 		url = "https://example.com"
 	}
 	_, err := scrape(url)
