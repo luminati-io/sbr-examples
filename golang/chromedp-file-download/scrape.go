@@ -32,27 +32,25 @@ func connect(ctx context.Context) (context.Context, context.CancelFunc) {
 func scrape(ctx context.Context, url string, selector string, filename string) error {
 	var requestId fetch.RequestID
 	var fileSize int
+	var err error
 	bCtx, bCtxCancel := chromedp.NewContext(ctx)
 	defer bCtxCancel()
 	fmt.Printf("Connecting to Scraping Browser...\n")
-	err := chromedp.Run(bCtx,
+	return chromedp.Run(bCtx,
 		action(func() { fmt.Printf("Connected! Navigating to %s...\n", url) }),
 		chromedp.Navigate(url),
 		action(func() { fmt.Print("Navigated! Initiating download...\n") }),
 		chromedp.ActionFunc(func(ctx context.Context) error {
-			_requestId, err := initiateDownload(ctx, selector)
-			requestId = _requestId
+			requestId, err = initiateDownload(ctx, selector)
 			return err
 		}),
 		action(func() { fmt.Printf("Download started! Stream it to %s...\n", filename) }),
 		chromedp.ActionFunc(func(ctx context.Context) error {
-			_fileSize, err := streamToFile(ctx, requestId, filename)
-			fileSize = _fileSize
+			fileSize, err = streamToFile(ctx, requestId, filename)
 			return err
 		}),
 		action(func() { fmt.Printf("Download saved! Size: %d.\n", fileSize) }),
 	)
-	return err
 }
 
 func action(f func()) chromedp.ActionFunc {
@@ -114,19 +112,18 @@ func streamToFile(ctx context.Context, requestId fetch.RequestID, filename strin
 	return fileSize, nil
 }
 
+func env(name string, defaultValue string) string {
+	value, ok := os.LookupEnv(name)
+	if ok {
+		return value
+	}
+	return defaultValue
+}
+
 func main() {
-	url, ok := os.LookupEnv("TARGET_URL")
-	if !ok {
-		url = "https://myjob.page/tools/test-files"
-	}
-	selector, ok := os.LookupEnv("SELECTOR")
-	if !ok {
-		selector = "a[role=button]"
-	}
-	filename, ok := os.LookupEnv("FILENAME")
-	if !ok {
-		filename = "./testfile.zip"
-	}
+	url := env("TARGET_URL", "https://myjob.page/tools/test-files")
+	selector := env("SELECTOR", "a[role=button]")
+	filename := env("FILENAME", "./testfile.zip")
 	ctx, ctxCancel := connect(context.Background())
 	defer ctxCancel()
 	err := scrape(ctx, url, selector, filename)
