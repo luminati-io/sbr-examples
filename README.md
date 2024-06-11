@@ -77,3 +77,13 @@ $ cd java/playwright-basic
 .../playwright-basic$ java -jar target/sbr-examples-1.0.jar
 ```
 
+golang
+------
+
+Use go toolchan to install required libraries, build and run
+
+```
+$ cd golang/playwright-basic
+.../golang/playwright-basic$ go get
+.../golang/playwright-basic$ go run scrape.go
+
