@@ -48,9 +48,7 @@ class Scraper
                 var result = Cdp(driver, "Download.getList");
                 var data = result.Get<object[]>("data");
                 if (data.Length == 0)
-                {
                     throw new Exception("List is empty");
-                }
                 return (Dictionary<string, object>) data[0];
             });
             Log($"Download is available! Saving it to {filename}...");
