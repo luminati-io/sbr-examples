@@ -33,14 +33,13 @@ async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME
             return data.length ? data : false;
         }));
         console.log(`Download is available! Saving it to ${filename}...`);
-        const { body, base64Encoded } = await cdp('Download.getDownloadedBody', {
-            requestId: data[0].id,
-        });
-        const buffer = Buffer.from(body, base64Encoded ? 'base64' : 'utf8');
+        const requestId = data[0].id;
+        const { body, base64Encoded } = await cdp('Download.getDownloadedBody', { requestId });
+        const bytes = Buffer.from(body, base64Encoded ? 'base64' : 'utf8');
         const file = await fs.open(filename, 'w');
-        await file.write(buffer);
+        await file.write(bytes);
         await file.close();
-        console.log(`Download saved! Size: ${buffer.length}.`);
+        console.log(`Download saved! Size: ${bytes.length}.`);
     } finally {
         console.log(`Closing session.`);
         await driver.quit();

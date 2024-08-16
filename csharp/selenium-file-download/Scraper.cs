@@ -37,7 +37,7 @@ class Scraper
         try {
             Log("Connected! Enable file download...");
             Cdp(driver, "Download.enable", new (){
-                {"allowedContentTypes", new []{ "application/zip" }},
+                {"allowedContentTypes", new []{"application/zip"}},
             });
             Log($"Navigating to {url}...");
             driver.Navigate().GoToUrl(url);
@@ -55,13 +55,13 @@ class Scraper
             });
             Log($"Download is available! Saving it to {filename}...");
             var requestId = data.Get<string>("id");
-            var body = Cdp(driver, "Download.getDownloadedBody", new (){
-                { "requestId", requestId },
+            var response = Cdp(driver, "Download.getDownloadedBody", new (){
+                {"requestId", requestId},
             });
             var file = File.OpenWrite(filename);
-            var bytes = body.Get<bool>("base64Encoded")
-                ? Convert.FromBase64String(body.Get<string>("body"))
-                : Encoding.UTF8.GetBytes(body.Get<string>("body"));
+            var bytes = response.Get<bool>("base64Encoded")
+                ? Convert.FromBase64String(response.Get<string>("body"))
+                : Encoding.UTF8.GetBytes(response.Get<string>("body"));
             file.Write(bytes);
             Log($"Download saved! Size {bytes.Length}.");
         } finally {
