@@ -37,6 +37,7 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
         print('Waiting for download...')
         wait = WebDriverWait(driver, timeout=60)
         data = wait.until(lambda _: cdp('Download.getList')['data'])
+        print(f'Download is available! Saving it to {filename}')
         request_id = data[0]['id']
         response = cdp('Download.getDownloadedBody', {'requestId': request_id})
         if response['base64Encoded']:
@@ -45,6 +46,7 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
             body = bytes(response['body'], 'utf8')
         with open(filename, 'wb') as file:
             file.write(body)
+        print(f'Download saved! Size: {len(body)}')
     finally:
         print('Closing session.')
         driver.quit()
