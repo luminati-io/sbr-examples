@@ -28,13 +28,12 @@ async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME
         console.log(`Navigated! Initiating download...`)
         const initiator = await driver.findElement(By.css(selector));
         await initiator.click();
-        const data = await driver.wait(new Condition('Waiting download is available', async () => {
-            const { data } = await cdp('Download.getList');
-            return data.length ? data : false;
+        const id = await driver.wait(new Condition('Waiting download completed', async () => {
+            const last = await cdp('Download.getLastCompleted');
+            return last.id;
         }));
-        console.log(`Download is available! Saving it to ${filename}...`);
-        const requestId = data[0].id;
-        const { body, base64Encoded } = await cdp('Download.getDownloadedBody', { requestId });
+        console.log(`Download completed! Saving it to ${filename}...`);
+        const { body, base64Encoded } = await cdp('Download.getDownloadedBody', { requestId: id });
         const bytes = Buffer.from(body, base64Encoded ? 'base64' : 'utf8');
         const file = await fs.open(filename, 'w');
         await file.write(bytes);
