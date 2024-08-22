@@ -43,24 +43,20 @@ class Scraper
             driver.Navigate().GoToUrl(url);
             Log("Navigated! Initiating download...");
             driver.FindElement(By.CssSelector(selector)).Click();
+            Log("Waiting for download...");
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
-            var data = wait.Until(_=>{
-                var result = Cdp(driver, "Download.getList");
-                var data = result.Get<object[]>("data");
-                if (data.Length == 0)
-                    throw new Exception("List is empty");
-                return (Dictionary<string, object>) data[0];
-            });
-            Log($"Download is available! Saving it to {filename}...");
-            var requestId = data.Get<string>("id");
+            var id = wait.Until(_ =>
+                Cdp(driver, "Download.getLastCompleted").Get<string>("id"));
+            Log($"Download completed! Saving it to {filename}...");
             var response = Cdp(driver, "Download.getDownloadedBody", new (){
-                {"requestId", requestId},
+                {"id", id},
             });
-            var file = File.OpenWrite(filename);
             var bytes = response.Get<bool>("base64Encoded")
                 ? Convert.FromBase64String(response.Get<string>("body"))
                 : Encoding.UTF8.GetBytes(response.Get<string>("body"));
+            var file = File.OpenWrite(filename);
             file.Write(bytes);
+            file.Close();
             Log($"Download saved! Size {bytes.Length}.");
         } finally {
             Log("Closing session.");
