@@ -27,6 +27,7 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
             'cmd': cmd,
             'params': params,
         })['value']
+
     try:
         print('Connected! Enable file download...')
         cdp('Download.enable', {'allowedContentTypes': ['application/zip']})
@@ -36,10 +37,9 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
         driver.find_element(By.CSS_SELECTOR, selector).click()
         print('Waiting for download...')
         wait = WebDriverWait(driver, timeout=60)
-        data = wait.until(lambda _: cdp('Download.getList')['data'])
-        print(f'Download is available! Saving it to {filename}')
-        request_id = data[0]['id']
-        response = cdp('Download.getDownloadedBody', {'requestId': request_id})
+        download_id = wait.until(lambda _: cdp('Download.getLastCompleted')['id'])
+        print(f'Download completed! Saving it to {filename}')
+        response = cdp('Download.getDownloadedBody', {'id': download_id})
         if response['base64Encoded']:
             body = standard_b64decode(response['body'])
         else:
