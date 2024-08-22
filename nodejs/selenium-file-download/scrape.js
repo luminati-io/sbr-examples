@@ -33,7 +33,7 @@ async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME
             return last.id;
         }));
         console.log(`Download completed! Saving it to ${filename}...`);
-        const { body, base64Encoded } = await cdp('Download.getDownloadedBody', { requestId: id });
+        const { body, base64Encoded } = await cdp('Download.getDownloadedBody', { id });
         const bytes = Buffer.from(body, base64Encoded ? 'base64' : 'utf8');
         const file = await fs.open(filename, 'w');
         await file.write(bytes);
