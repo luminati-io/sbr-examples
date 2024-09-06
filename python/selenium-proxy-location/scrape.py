@@ -19,7 +19,7 @@ LOCATIONS = {
 
 def scrape(url=TARGET_URL, location=LOCATION):
     if AUTH == 'USER:PASS':
-        raise Exception('Provide Scraping Browsers credentials in AUTH ' +
+        raise Exception('Provide Scraping Browsers credentials in AUTH '
                         'environment variable or update the script.')
     if location not in LOCATIONS:
         raise Exception('Unknown location')

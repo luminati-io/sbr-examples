@@ -29,7 +29,7 @@ class ScrapingBrowsersSpider(Spider):
     @classmethod
     def from_crawler(cls, crawler, *args, auth=AUTH, **kwargs):
         if auth == 'USER:PASS':
-            raise Exception('Provide Scraping Browsers credentials in AUTH ' +
+            raise Exception('Provide Scraping Browsers credentials in AUTH '
                             'environment variable or update the script.')
         spider = super().from_crawler(crawler, *args, **kwargs)
         cdp_url = f'wss://{auth}@brd.superproxy.io:9222'

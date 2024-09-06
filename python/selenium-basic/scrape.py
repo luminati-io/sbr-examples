@@ -9,7 +9,7 @@ TARGET_URL = environ.get('TARGET_URL', default='https://example.com')
 
 def scrape(url=TARGET_URL):
     if AUTH == 'USER:PASS':
-        raise Exception('Provide Scraping Browsers credentials in AUTH ' +
+        raise Exception('Provide Scraping Browsers credentials in AUTH '
                         'environment variable or update the script.')
     print('Connecting to Browser...')
     server_addr = f'https://{AUTH}@brd.superproxy.io:9515'
