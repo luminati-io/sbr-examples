@@ -14,7 +14,7 @@ FILENAME = environ.get('FILENAME', default='./testfile.zip')
 async def scrape(playwright: Playwright, url=TARGET_URL,
                  selector=SELECTOR, filename=FILENAME):
     if AUTH == 'USER:PASS':
-        raise Exception('Provide Scraping Browsers credentials in AUTH ' +
+        raise Exception('Provide Scraping Browsers credentials in AUTH '
                         'environment variable or update the script.')
     print('Connecting to Browser...')
     endpoint_url = f'wss://{AUTH}@brd.superproxy.io:9222'
