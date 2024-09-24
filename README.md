@@ -1,7 +1,7 @@
 sbr-examples
 ============
 
-Examples of BrightData's Scraping Browsers usage using common browser-control
+Examples of Bright Data's [Scraping Browsers](https://brightdata.com/products/scraping-browser) usage using common browser-control
 libraries.
 
 - *-basic: simple scraping of targeted page
