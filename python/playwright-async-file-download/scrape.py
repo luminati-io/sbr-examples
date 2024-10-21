@@ -6,9 +6,9 @@ from playwright.async_api import Playwright, Page, CDPSession, async_playwright
 
 AUTH = environ.get('AUTH', default='USER:PASS')
 TARGET_URL = environ.get('TARGET_URL',
-                         default='https://myjob.page/tools/test-files')
-SELECTOR = environ.get('SELECTOR', default='a[role=button]')
-FILENAME = environ.get('FILENAME', default='./testfile.zip')
+                         default='https://calmcode.io/datasets/bigmac')
+SELECTOR = environ.get('SELECTOR', default='button.border')
+FILENAME = environ.get('FILENAME', default='./testfile.csv')
 
 
 async def scrape(playwright: Playwright, url=TARGET_URL,
