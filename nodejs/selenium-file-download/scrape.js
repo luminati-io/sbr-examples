@@ -3,9 +3,9 @@ const { Builder, Browser, By, Condition } = require('selenium-webdriver');
 const fs = require('fs/promises');
 const {
     AUTH = 'USER:PASS',
-    TARGET_URL = 'https://myjob.page/tools/test-files',
-    SELECTOR = 'a[role=button]',
-    FILENAME = './testfile.zip',
+    TARGET_URL = 'https://calmcode.io/datasets/bigmac',
+    SELECTOR = 'button.border',
+    FILENAME = './testfile.csv',
 } = process.env;
 
 async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME) {
@@ -22,7 +22,7 @@ async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME
     const cdp = (name, params = {}) => driver.sendAndGetDevToolsCommand(name, params);
     try {
         console.log(`Connected! Enable file download...`);
-        await cdp('Download.enable', { allowedContentTypes: ['application/zip'] });
+        await cdp('Download.enable', { allowedContentTypes: ['application/octet-stream'] });
         console.log(`Navigating to ${url}...`);
         await driver.get(url);
         console.log(`Navigated! Initiating download...`)

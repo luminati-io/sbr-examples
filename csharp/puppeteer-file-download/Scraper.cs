@@ -118,9 +118,9 @@ class Scraper
     public static async Task Main()
     {
         var auth = Env("AUTH", "USER:PASS");
-        var url = Env("TARGET_URL", "https://myjob.page/tools/test-files");
-        var selector = Env("SELECTOR", "a[role=button]");
-        var filename = Env("FILENAME", "./testfile.zip");
+        var url = Env("TARGET_URL", "https://calmcode.io/datasets/bigmac");
+        var selector = Env("SELECTOR", "button.border");
+        var filename = Env("FILENAME", "./testfile.csv");
         var scraper = new Scraper(auth);
         await scraper.Scrape(url, selector, filename);
     }

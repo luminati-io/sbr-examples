@@ -106,9 +106,9 @@ public class Scraper {
     public static void main(String[] args) throws Exception {
         var env = System.getenv();
         var auth = env.getOrDefault("AUTH", "USER:PASS");
-        var targetUrl = env.getOrDefault("TARGET_URL", "https://myjob.page/tools/test-files");
-        var selector = env.getOrDefault("SELECTOR", "a[role=button]");
-        var filename = env.getOrDefault("FILENAME", "./testfile.zip");
+        var targetUrl = env.getOrDefault("TARGET_URL", "https://calmcode.io/datasets/bigmac");
+        var selector = env.getOrDefault("SELECTOR", "button.border");
+        var filename = env.getOrDefault("FILENAME", "./testfile.csv");
         var options = new Playwright.CreateOptions()
             .setEnv(new HashMap<>(env){{
                 put("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD", "1");

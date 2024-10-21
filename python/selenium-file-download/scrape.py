@@ -9,9 +9,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 AUTH = environ.get('AUTH', default='USER:PASS')
 TARGET_URL = environ.get('TARGET_URL',
-                         default='https://myjob.page/tools/test-files')
-SELECTOR = environ.get('SELECTOR', default='a[role=button]')
-FILENAME = environ.get('FILENAME', default='./testfile.zip')
+                         default='https://calmcode.io/datasets/bigmac')
+SELECTOR = environ.get('SELECTOR', default='button.border')
+FILENAME = environ.get('FILENAME', default='./testfile.csv')
 
 
 def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
@@ -31,7 +31,7 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
 
     try:
         print('Connected! Enable file download...')
-        cdp('Download.enable', {'allowedContentTypes': ['application/zip']})
+        cdp('Download.enable', {'allowedContentTypes': ['application/octet-stream']})
         print(f'Navigating to {url}...')
         driver.get(url)
         print('Navigated! Initiating download...')

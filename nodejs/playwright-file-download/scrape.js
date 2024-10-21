@@ -3,9 +3,9 @@ const playwright = require('playwright');
 const fs = require('fs/promises');
 const {
     AUTH = 'USER:PASS',
-    TARGET_URL = 'https://myjob.page/tools/test-files',
-    SELECTOR = 'a[role=button]',
-    FILENAME = './testfile.zip',
+    TARGET_URL = 'https://calmcode.io/datasets/bigmac',
+    SELECTOR = 'button.border',
+    FILENAME = './testfile.csv',
 } = process.env;
 
 async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME) {

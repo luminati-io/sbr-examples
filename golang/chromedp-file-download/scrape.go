@@ -121,9 +121,9 @@ func env(name string, defaultValue string) string {
 }
 
 func main() {
-	url := env("TARGET_URL", "https://myjob.page/tools/test-files")
-	selector := env("SELECTOR", "a[role=button]")
-	filename := env("FILENAME", "./testfile.zip")
+	url := env("TARGET_URL", "https://calmcode.io/datasets/bigmac")
+	selector := env("SELECTOR", "button.border")
+	filename := env("FILENAME", "./testfile.csv")
 	ctx, ctxCancel := connect(context.Background())
 	defer ctxCancel()
 	err := scrape(ctx, url, selector, filename)

@@ -3,9 +3,9 @@ const puppeteer = require('puppeteer-core');
 const fs = require('fs/promises');
 const {
     AUTH = 'USER:PASS',
-    TARGET_URL = 'https://myjob.page/tools/test-files',
-    SELECTOR = 'a[role=button]',
-    FILENAME = './testfile.zip',
+    TARGET_URL = 'https://calmcode.io/datasets/bigmac',
+    SELECTOR = 'button.border',
+    FILENAME = './testfile.csv',
 } = process.env;
 
 async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME) {
@@ -20,7 +20,7 @@ async function scrape(url = TARGET_URL, selector = SELECTOR, filename = FILENAME
         console.log(`Connected! Enable file download...`);
         const page = await browser.newPage();
         const client = await page.createCDPSession();
-        await client.send('Download.enable', { allowedContentTypes: ['application/zip'] });
+        await client.send('Download.enable', { allowedContentTypes: ['application/octet-stream'] });
         console.log(`Navigating to ${url}...`);
         await page.goto(url, { timeout: 2 * 60 * 1000 });
         console.log(`Navigated! Initiating download...`);
