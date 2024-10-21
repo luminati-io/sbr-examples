@@ -2,7 +2,8 @@
 from os import environ
 from base64 import standard_b64decode
 from selenium.webdriver import Remote, ChromeOptions as Options
-from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnection as Connection
+from selenium.webdriver.chromium.remote_connection import \
+    ChromiumRemoteConnection as Connection
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -36,7 +37,7 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
         print('Navigated! Initiating download...')
         driver.find_element(By.CSS_SELECTOR, selector).click()
         print('Waiting for download...')
-        wait = WebDriverWait(driver, timeout=60)
+        wait = WebDriverWait(driver, timeout=60, ignored_exceptions=(KeyError))
         download_id = wait.until(lambda _: cdp('Download.getLastCompleted')['id'])
         print(f'Download completed! Saving it to {filename}')
         response = cdp('Download.getDownloadedBody', {'id': download_id})
