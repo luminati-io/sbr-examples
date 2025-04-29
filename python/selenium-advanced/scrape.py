@@ -25,13 +25,16 @@ def scrape(url=TARGET_URL):
         })['value']
     try:
         print('Connected! Starting inspect session...')
+        debug_info = cdp('Unblocker.getDebugInfo')
+        session_id = debug_info["connectionId"]
+        print(f'Current SBR session: {session_id}')
         frames = cdp('Page.getFrameTree')
         frame_id = frames['frameTree']['frame']['id']
         inspect = cdp('Page.inspect', {
             'frameId': frame_id,
         })
         inspect_url = inspect['url']
-        print(f'You can inspect this session at: {inspect_url}.')
+        print(f'You can inspect this session at: {inspect_url}')
         print('Scraping will continue in 10 seconds...')
         sleep(10)
         print(f'Navigating to {url}...')
