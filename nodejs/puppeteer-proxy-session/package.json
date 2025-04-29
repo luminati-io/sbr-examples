@@ -1,0 +1,16 @@
+{
+  "name": "@brightdata/sbr-examples",
+  "version": "1.0.0",
+  "description": "Examples of usage BrightData's Scraping Browsers",
+  "main": "scrape.js",
+  "scripts": {
+    "test": "node scrape.js"
+  },
+  "engines": {
+    "node": ">=18.0"
+  },
+  "license": "ZON",
+  "dependencies": {
+    "puppeteer-core": "^22.3.0"
+  }
+}
