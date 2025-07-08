@@ -40,7 +40,7 @@ class Scraper
             {
                 {"cmd", "Captcha.solve"},
                 {"params", new Dictionary<string, object>(){
-                    {"detectTimeout", 10000},
+                    {"detectTimeout", 10 * 1000},
                 }},
             }) as Dictionary<string, object>;
             var status = (string) result!["status"];

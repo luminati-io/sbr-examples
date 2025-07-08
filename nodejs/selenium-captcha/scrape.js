@@ -21,7 +21,7 @@ async function scrape(url = TARGET_URL) {
         await driver.get(url);
         console.log(`Navigated! Waiting captcha to detect and solve...`);
         const { status } = await driver.sendAndGetDevToolsCommand('Captcha.waitForSolve', {
-            detectTimeout: 10000,
+            detectTimeout: 10 * 1000,
         });
         console.log(`Captcha status: ${status}`);
     } finally {

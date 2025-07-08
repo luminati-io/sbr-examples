@@ -32,7 +32,7 @@ public class Scraper {
             var exec = new RemoteExecuteMethod(driver);
             var result = (Map<String, ?>) exec.execute("executeCdpCommand", Map.of(
                 "cmd", "Captcha.waitForSolve",
-                "params", Map.of("detectTimeout", 10000)));
+                "params", Map.of("detectTimeout", 10 * 1000)));
             var status = (String) result.get("status");
             log("Captcha status: %s", status);
         } finally {
