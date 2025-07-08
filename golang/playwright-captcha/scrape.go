@@ -50,7 +50,7 @@ func scrape(url string) (string, error) {
 	}
 	fmt.Print("Navigated! Waiting captcha to detect and solve...\n")
 	result, err := session.Send("Captcha.waitForSolve", map[string]any{
-		"detectTimeout": 30000,
+		"detectTimeout": 10000,
 	})
 	if err != nil {
 		return "", err
