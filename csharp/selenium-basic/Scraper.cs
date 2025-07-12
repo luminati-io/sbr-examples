@@ -56,7 +56,7 @@ class Scraper
     public static void Main()
     {
         var auth = Env("AUTH", "USER:PASS");
-        var url = Env("TARGET_URL", "https://www.example.com");
+        var url = Env("TARGET_URL", "https://example.com");
         var scraper = new Scraper(auth);
         scraper.Scrape(url);
     }
