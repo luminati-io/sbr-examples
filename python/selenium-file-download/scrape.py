@@ -12,6 +12,7 @@ TARGET_URL = environ.get('TARGET_URL',
                          default='https://calmcode.io/datasets/bigmac')
 SELECTOR = environ.get('SELECTOR', default='button.border')
 FILENAME = environ.get('FILENAME', default='./testfile.csv')
+CHUNK_SIZE = int(environ.get('CHUNK_SIZE', default='1048576'))
 
 
 def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
@@ -40,14 +41,28 @@ def scrape(url=TARGET_URL, selector=SELECTOR, filename=FILENAME):
         wait = WebDriverWait(driver, timeout=60, ignored_exceptions=(KeyError))
         download_id = wait.until(lambda _: cdp('Download.getLastCompleted')['id'])
         print(f'Download completed! Saving it to {filename}')
-        response = cdp('Download.getDownloadedBody', {'id': download_id})
-        if response['base64Encoded']:
-            body = standard_b64decode(response['body'])
-        else:
-            body = bytes(response['body'], 'utf8')
+        file_size = 0
+        chunk_index = 1
+        offset = 0
         with open(filename, 'wb') as file:
-            file.write(body)
-        print(f'Download saved! Size: {len(body)}')
+            while True:
+                response = cdp('Download.getDownloadedBody', {
+                    'id': download_id,
+                    'offset': offset,
+                    'size': CHUNK_SIZE,
+                })
+                if response['base64Encoded']:
+                    chunk = standard_b64decode(response['body'])
+                else:
+                    chunk = bytes(response['body'], 'utf8')
+                print(f'Download chunk #{chunk_index}! Size: {len(chunk)}')
+                file.write(chunk)
+                file_size += len(chunk)
+                offset += len(chunk)
+                chunk_index += 1
+                if response['eof']:
+                    break
+        print(f'Download saved! Size: {file_size}')
     finally:
         print('Closing session.')
         driver.quit()
