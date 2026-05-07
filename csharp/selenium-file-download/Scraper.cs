@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -8,10 +8,12 @@ class Scraper
 {
 
     private string _auth;
+    private int _chunkSize;
 
-    public Scraper(string auth)
+    public Scraper(string auth, int chunkSize)
     {
         _auth = auth;
+        _chunkSize = chunkSize;
     }
 
     private WebDriver Connect()
@@ -48,16 +50,33 @@ class Scraper
             var id = wait.Until(_ =>
                 Cdp(driver, "Download.getLastCompleted").Get<string>("id"));
             Log($"Download completed! Saving it to {filename}...");
-            var response = Cdp(driver, "Download.getDownloadedBody", new (){
-                {"id", id},
-            });
-            var bytes = response.Get<bool>("base64Encoded")
-                ? Convert.FromBase64String(response.Get<string>("body"))
-                : Encoding.UTF8.GetBytes(response.Get<string>("body"));
+            var fileSize = 0;
+            var chunkIndex = 1;
+            var offset = 0;
             var file = File.OpenWrite(filename);
-            file.Write(bytes);
-            file.Close();
-            Log($"Download saved! Size {bytes.Length}.");
+            try {
+                while (true)
+                {
+                    var response = Cdp(driver, "Download.getDownloadedBody", new(){
+                        {"id", id},
+                        {"offset", offset},
+                        {"size", _chunkSize},
+                    });
+                    var chunk = response.Get<bool>("base64Encoded")
+                        ? Convert.FromBase64String(response.Get<string>("body"))
+                        : Encoding.UTF8.GetBytes(response.Get<string>("body"));
+                    Log($"Download chunk #{chunkIndex}! Size: {chunk.Length}");
+                    file.Write(chunk);
+                    fileSize += chunk.Length;
+                    offset += chunk.Length;
+                    chunkIndex++;
+                    if (response.Get<bool>("eof"))
+                        break;
+                }
+            } finally {
+                file.Close();
+            }
+            Log($"Download saved! Size: {fileSize}.");
         } finally {
             Log("Closing session.");
             driver.Quit();
@@ -90,7 +109,8 @@ class Scraper
         var url = Env("TARGET_URL", "https://calmcode.io/datasets/bigmac");
         var selector = Env("SELECTOR", "button.border");
         var filename = Env("FILENAME", "./testfile.csv");
-        var scraper = new Scraper(auth);
+        var chunkSize = int.Parse(Env("CHUNK_SIZE", "1048576"));
+        var scraper = new Scraper(auth, chunkSize);
         scraper.Scrape(url, selector, filename);
     }
 
